@@ -151,6 +151,8 @@
     <ClInclude Include="MST_MATRIX.h" />
     <ClInclude Include="MST_SUCCESSOR.h" />
     <ClInclude Include="PQUEUE.h" />
+    <ClInclude Include="SP_Matrix.h" />
+    <ClInclude Include="SP_Successor.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -160,6 +162,8 @@
     <ClCompile Include="MST_SUCCESSOR.cpp" />
     <ClCompile Include="PQUEUE.cpp" />
     <ClCompile Include="SDIZO_2.cpp" />
+    <ClCompile Include="SP_Matrix.cpp" />
+    <ClCompile Include="SP_Successor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

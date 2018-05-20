@@ -103,7 +103,7 @@ TNode * MST_SUCCESSOR::getAList(int n)
 MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()
 {
 
-	PQUEUE Q(edgeNum);
+	PQUEUE Q(edgeNum*2);
 	Edge e;
 	MST_SUCCESSOR * T = new MST_SUCCESSOR(vNum);
 	bool * visited = new bool[vNum];
@@ -117,19 +117,22 @@ MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()
 	int startV = 0;
 	TNode * temp;
 	visited[0] = true;
-	for (int i = 1; i < vNum; i++)          // Do drzewa dodamy n - 1 krawêdzi grafu
+	for (int i = 0; i < vNum-1; i++)          // Do drzewa dodamy n - 1 krawêdzi grafu
 	{
-		for (temp = A[i];temp!=NULL ; temp = temp->next)
-		{									// Przegl¹damy listê s¹siadów
-			if (visited[temp->v]==false)          // Jeœli s¹siad jest nieodwiedzony,
+
+		temp = A[startV];
+		while (temp != NULL)
+		{
+			if (visited[temp->v] == false)
 			{
-				e.v1 = startV;                 // to tworzymy krawêdŸ
+				e.v1 = startV;
 				e.v2 = temp->v;
 				e.weight = temp->weight;
-				Q.push(e);                // Dodajemy j¹ do kolejki priorytetowej
+				Q.push(e);
 			}
+			temp = temp->next;
 		}
-
+		Q.display();
 		do
 		{
 			e = Q.getFront();              // Pobieramy krawêdŸ z kolejki
@@ -181,8 +184,7 @@ MST_SUCCESSOR * MST_SUCCESSOR::solveKRUSKAL()
 	}
 
 	
-	
-
+	MST_SUCCESSOR * P = T;
 	return T;
 }
 

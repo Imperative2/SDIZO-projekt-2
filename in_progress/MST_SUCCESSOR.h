@@ -3,7 +3,7 @@
 
 struct TNode
 {
-	TNode * next;
+	TNode * next = NULL;
 	int v;
 	int weight;
 };

@@ -12,13 +12,17 @@ class PQUEUE
 
 private:
 	int size;
-	int hpos;
+	int maxSizeHeap;
 	Edge * heap;
 
 public:
 	void push(Edge e);
 	void pop();
 	Edge getFront();
+	void display();
+	void bubbleUp(int index);
+	void bubbleDown(int index);
+	int getMaxSize() { return maxSizeHeap; };
 	PQUEUE(int n);
 	~PQUEUE();
 };
