@@ -30,9 +30,6 @@
     <ClInclude Include="MST_SUCCESSOR.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="DSStruct.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="SP_Successor.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="MST_SUCCESSOR.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="DSStruct.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="SP_Successor.cpp">

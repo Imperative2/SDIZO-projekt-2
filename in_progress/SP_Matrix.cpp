@@ -6,7 +6,7 @@
 #include <iomanip>
 
 
-void SP_Matrix::display()
+void SP_Matrix::display()//display the matrix
 {
 	for (int i = 0; i < vNum; i++)
 	{
@@ -24,7 +24,7 @@ void SP_Matrix::display()
 	}
 }
 
-void SP_Matrix::load(std::string name)
+void SP_Matrix::load(std::string name)// loads structure from the file name - name of the file
 {
 	name += ".txt";
 	std::ifstream file;
@@ -70,89 +70,78 @@ void SP_Matrix::load(std::string name)
 	system("pause");
 }
 
-void SP_Matrix::solveDikstra(int v, int res)
+void SP_Matrix::solveDikstra(int v, int res)// solves shortest path using dijkstra algorithm v- starting vertex res-end vertex
 {
-	costTab = new int[vNum];
-	prevTab = new int[vNum];
-	QS = new bool[vNum];
-	stack = new int[vNum];
-	stPointer = 0;
+	costTab = new int[vNum];//arry of costs
+	prevTab = new int[vNum];//array of previous vertices
+	QS = new bool[vNum];//array of visited vertices
+	stack = new int[vNum];//stack used for printingay of visited vertices
+	stPointer = 0;//pointer to the stack
 
-	TNode * temp;
+	TNode * temp; //temporary node
 
-	TNode **graf = new TNode*[vNum*2];
-
-	for (int i = 0; i < vNum; i++)
+	for (int i = 0; i < vNum; i++)//sets starting conditions 
 	{
 		costTab[i] = MAXINT;
 		prevTab[i] = -1;
 		QS[i] = false;
 	}
 
-	costTab[v] = 0;
+	costTab[v] = 0;//sets cost of the start point to 0
 
 	for (int i = 0; i < vNum; i++)
 	{
-		for (int j = 0; j < edgeNum; j++)
+		int selected = v;
+		bool flag = false;
+		int preSelected = MAXINT;
+		for (int j = 0; j < vNum; j++)
 		{
-			if (matrix[i][j] > 0)
+			if (  QS[j] == false && costTab[j] < preSelected)
 			{
-				int k;
+				selected = j;
+				preSelected = costTab[j];
+			}
+		}
+
+		QS[selected] = true;
+		for (int j = 0; j < edgeNum; j++) //relaxing
+		{
+			int a;
+			int b;
+			if (matrix[selected][j] > 0)
+			{
+				int a = 0;
 				for (int l = 0; l < vNum; l++)
 				{
-					if (matrix[l][j] < 0) k = l;
+					a = matrix[l][j];
+					if (a < 0)
+					{
+						b = l;
+						break;
+					}
 				}
-				TNode *tstart = new TNode;             // Tworzymy element listy s¹siedztwa
-				tstart->v = k;                    // Wierzcho³ek docelowy krawêdzi
-				tstart->weight = matrix[i][j];                    // Waga krawêdzi
-				tstart->next = graf[i];
-				graf[i] = tstart;
+				if (costTab[b] > costTab[selected] - a)
+				{
+					costTab[b] = costTab[selected] - a;
+					prevTab[b] = selected;
+				}
 			}
 		}
 	}
-
-	for (int i = 0; i < vNum; i++)
-	{
-		int j, u;
-		for (j = 0; QS[j]; j++);
-		for (u = j++; j < vNum; j++)
-		{
-			if (!QS[j] && (costTab[j] < costTab[u]))
-				u = j;
-		}
-
-		QS[u] = true;
-
-
-		for (temp = graf[u]; temp; temp = temp->next)
-		{
-
-			if (!QS[temp->v] && (costTab[temp->v] > costTab[u] + temp->weight))
-			{
-				costTab[temp->v] = costTab[u] + temp->weight;
-				prevTab[temp->v] = u;
-			}
-		}
-	}
-	//for (int i = 0; i < vNum; i++)
-	//{
-	//	std::cout << "i " << i << " koszt: " << costTab[i] << " prevTab: " << prevTab[i] << std::endl;
-	//}
 
 	for (int i = 0; i < vNum; i++)
 	{
 		std::cout << i << ": ";
 
-		// Œcie¿kê przechodzimy od koñca ku pocz¹tkowi,
-		// Zapisuj¹c na stosie kolejne wierzcho³ki
+		//display the path, loading vertices from the stack
 
 		for (int j = i; j > -1; j = prevTab[j]) stack[stPointer++] = j;
 
-		// Wyœwietlamy œcie¿kê, pobieraj¹c wierzcho³ki ze stosu
+		// at the end of the path we display the cost
 
 		while (stPointer) std::cout << stack[--stPointer] << " ";
 
-		// Na koñcu œcie¿ki wypisujemy jej koszt
+		//cost of the end vertex
 
 		std::cout << "$" << costTab[i] << std::endl;
 	}
@@ -162,7 +151,102 @@ void SP_Matrix::solveDikstra(int v, int res)
 
 }
 
-void SP_Matrix::addEdge(int s, int e, int w, int column)
+void SP_Matrix::solveFordBellman(int v, int res)
+{
+	costTab = new int[vNum];
+	prevTab = new int[vNum];
+	stack = new int[vNum];
+	stPointer = 0;
+
+	for (int i = 0; i < vNum; i++)
+	{
+		costTab[i] = MAXINT;
+		prevTab[i] = -1;
+	}
+
+	if (bf(v, costTab, prevTab))
+	{
+		stack = new int[vNum];              // simple stack
+		stPointer = 0;
+
+		for (int i = 0; i < vNum; i++)
+		{
+			std::cout << i << ": ";
+			for (int j = i; j != -1; j = prevTab[j]) //put the vertices of the path on the stack
+				stack[stPointer++] = j;            // in order from last to first
+
+			while (stPointer)                // print vertices from the stack
+				std::cout << stack[--stPointer] << " "; // in order from first to last
+
+			std::cout << "$" << costTab[i] << std::endl; // at the end display the cost of the path
+		}
+		delete[] stack;                  // delete the stack
+	}
+	else std::cout << "Negative Cycle found!" << std::endl;
+
+	std::cout << " !!!Wynik wyszukiwania koszt: " << costTab[res] << std::endl;
+}
+
+bool SP_Matrix::bf(int v, int * costTab, int * prevTab)// v- start vertex
+{
+
+	bool test;
+	TNode * temp;
+
+	costTab[v] = 0;                       // set cost of the start vertex to 0
+
+	for (int i = 1; i < vNum; i++)          // relaxing loop
+	{
+		test = true;                  // means there is no change in costTab and prevTab
+		for (int x = 0; x < vNum; x++)// search through vertices
+		{
+			for (int j = 0; j < edgeNum; j++)// seach all edges for x vertex
+			{
+				if (matrix[x][j] > 0)
+				{
+					for (int l = 0; l < vNum; l++)
+					{
+						if (matrix[l][j] < 0)
+						{
+							if (costTab[l] > costTab[x] + matrix[x][j])// check if the condition of the relaxation is true
+							{
+								test = false;// means there is a change in costTab and prevTab
+								costTab[l] = costTab[x] + matrix[x][j];// relax edge from x to the neighbor
+								prevTab[l] = x;// predeccessor of neighbor is set to x
+							}
+						}
+					}
+				}
+			}
+		}
+		if (test) return true;         // if there was no change we stop
+	}
+
+	
+
+
+	// chceck if there is a negative cycle
+	for (int x = 0; x < vNum; x++)
+	{
+		for (int j = 0; j < edgeNum; j++)
+		{
+			if (matrix[x][j] > 0)
+			{
+				for (int l = 0; l < vNum; l++)
+				{
+					if (matrix[l][j] < 0)
+					{
+						if (costTab[l] > costTab[x] + matrix[x][j]) return false; // there is a negative cycle
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+void SP_Matrix::addEdge(int s, int e, int w, int column)// adds edge to the neighbour list s- starting point e-end point w- weight of the connection
 {
 	matrix[s][column] = w;
 	matrix[e][column] = -w;

@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DSStruct.h" />
     <ClInclude Include="MST_MATRIX.h" />
     <ClInclude Include="MST_SUCCESSOR.h" />
     <ClInclude Include="PQUEUE.h" />
@@ -157,7 +156,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DSStruct.cpp" />
     <ClCompile Include="MST_MATRIX.cpp" />
     <ClCompile Include="MST_SUCCESSOR.cpp" />
     <ClCompile Include="PQUEUE.cpp" />

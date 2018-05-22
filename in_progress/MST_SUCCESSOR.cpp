@@ -7,7 +7,7 @@
 #include <fstream>
 
 
-void MST_SUCCESSOR::dipsay()
+void MST_SUCCESSOR::dipsay()//displays the neighbor list
 {
 	for (int i = 0; i < vNum; i++)
 	{
@@ -15,17 +15,17 @@ void MST_SUCCESSOR::dipsay()
 		TNode * temp = A[i];
 		while (temp)
 		{
-			std::cout << temp->v << ":" << temp->weight<<"    ";
+			std::cout << temp->v << ":" << temp->weight << "    ";
 			temp = temp->next;
 
 		}
 		std::cout << std::endl;
 	}
 
-	std::cout << "\n Whole tree weight: " << cost<<std::endl;
+	std::cout << "\n Whole tree weight: " << cost << std::endl;
 }
 
-void MST_SUCCESSOR::load(std::string name)
+void MST_SUCCESSOR::load(std::string name)//loads structure from the file name - name of the file
 {
 	name += ".txt";
 	std::ifstream file;
@@ -65,7 +65,7 @@ void MST_SUCCESSOR::load(std::string name)
 
 }
 
-void MST_SUCCESSOR::addEdge(int s, int e, int w)
+void MST_SUCCESSOR::addEdge(int s, int e, int w)//adds edge to the graph s - start point vertex e - endpoint vertex w- weight of the connection
 {
 	TNode *temp = A[s];
 	while (true)
@@ -86,7 +86,7 @@ void MST_SUCCESSOR::addEdge(int s, int e, int w)
 			tend->weight = w;
 			tend->next = A[e];
 			A[e] = tend;
-			
+
 			break;
 		}
 		else
@@ -95,15 +95,15 @@ void MST_SUCCESSOR::addEdge(int s, int e, int w)
 	}
 }
 
-TNode * MST_SUCCESSOR::getAList(int n)
+TNode * MST_SUCCESSOR::getAList(int n)//returns list of the neighbors for the given vertex
 {
 	return A[n];
 }
 
-MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()
+MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()// solves and creates minimum spaing tree for the graph using prime algorithm
 {
 
-	PQUEUE Q(edgeNum*2);
+	PQUEUE Q(edgeNum * 2);
 	Edge e;
 	MST_SUCCESSOR * T = new MST_SUCCESSOR(vNum);
 	bool * visited = new bool[vNum];
@@ -117,11 +117,11 @@ MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()
 	int startV = 0;
 	TNode * temp;
 	visited[0] = true;
-	for (int i = 0; i < vNum-1; i++)          // Do drzewa dodamy n - 1 krawêdzi grafu
+	for (int i = 0; i < vNum - 1; i++)          // we add n-1 edges to the graph
 	{
 
 		temp = A[startV];
-		while (temp != NULL)
+		while (temp != NULL) //adds all edges to the queue of available connections
 		{
 			if (visited[temp->v] == false)
 			{
@@ -132,60 +132,128 @@ MST_SUCCESSOR* MST_SUCCESSOR::solvePRIM()
 			}
 			temp = temp->next;
 		}
-		Q.display();
+		//Q.display();
 		do
 		{
-			e = Q.getFront();              // Pobieramy krawêdŸ z kolejki
-			Q.pop();
-		} while (visited[e.v2]);       // KrawêdŸ prowadzi poza drzewo?
+			e = Q.getFront();              // load best connection from the queue
+			Q.pop();					//pops the edge from the queue
+		} while (visited[e.v2]);       // chcecks if the edge leads to the visited vertex
 
-		T->addEdge(e.v1,e.v2,e.weight);                 // Dodajemy krawêdŸ do drzewa rozpinaj¹cego
-		visited[e.v2] = true;         // Oznaczamy drugi wierzcho³ek jako odwiedzony
+		T->addEdge(e.v1, e.v2, e.weight);                 // we add the edge to the graph
+		visited[e.v2] = true;         // sets endpoint vertex as visited
 		startV = e.v2;
 	}
 
 
 	return T;
 }
-
+//not used
 MST_SUCCESSOR * MST_SUCCESSOR::solveKRUSKAL()
 {
 	TNode * temp;
-	PQUEUE Q(edgeNum);
+	PQUEUE* Q = new PQUEUE(edgeNum * 2);
 	Edge e;
 	MST_SUCCESSOR * T = new MST_SUCCESSOR(vNum);
-	
 
-	DSStruct Z(vNum);                  // Struktura zbiorów roz³¹cznych
-
+	int *colorTab = new int[vNum];
 	for (int i = 0; i < vNum; i++)
-		Z.MakeSet(i);                 // Dla ka¿dego wierzcho³ka tworzymy osobny zbiór
+	{
+		colorTab[i] = i;
+	}
+
+	int startV;
 
 	for (int i = 0; i < vNum; i++)
 	{
-		for (temp = A[i]; temp != NULL; temp = temp->next)
+		temp = A[i];
+		while (temp != NULL)
 		{
-			e.v1 = i;                 // to tworzymy krawêdŸ
+			e.v1 = i;
+			e.v2 = temp->v;
+			e.weight = temp->weight;
+			Q->push(e);
+
+			temp = temp->next;
+		}
+	}
+
+	Q->display();
+
+	int i = 0;
+
+	//MST_SUCCESSOR * P = T;
+	//return T;
+	return NULL;
+}
+
+MST_SUCCESSOR * MST_SUCCESSOR::sK()// solves and creates minimum spaing tree for the graph using kruskal algorithm
+{
+	TNode * temp;
+	PQUEUE Q(edgeNum * 2);
+	Edge e;
+	MST_SUCCESSOR * T = new MST_SUCCESSOR(vNum);
+
+	int *colorTab = new int[vNum]; //creates different color sets for all vertices
+	for (int i = 0; i < vNum; i++)
+	{
+		colorTab[i] = i;
+	}
+
+	int startV;
+
+	for (int i = 0; i < vNum; i++)// adds all edges to the priority queue
+	{
+		temp = A[i];
+		while (temp != NULL)
+		{
+			e.v1 = i;
 			e.v2 = temp->v;
 			e.weight = temp->weight;
 			Q.push(e);
+
+			temp = temp->next;
 		}
 	}
-	
-	for (int i = 1; i < vNum; i++)          // Pêtla wykonuje siê n - 1 razy !!!
-	{
-		do
-		{
-			e = Q.getFront();              // Pobieramy z kolejki krawêdŸ
-			Q.pop();                    // KrawêdŸ usuwamy z kolejki
-		} while (Z.FindSet(e.v1) == Z.FindSet(e.v2));
-		T->addEdge(e.v1, e.v2, e.weight);                // Dodajemy krawêdŸ do drzewa
-		Z.UnionSets(e);               // Zbiory z wierzcho³kami ³¹czymy ze sob¹
-	}
 
-	
-	MST_SUCCESSOR * P = T;
+	do {
+
+		e = Q.getFront();//gets best edge from the queue
+		Q.pop();//pops the edge
+		if (colorTab[e.v1] != colorTab[e.v2])//we check if the two vertices belong to the different color set
+		{
+			T->addEdge(e.v1, e.v2, e.weight);//add edge to the result graph
+			changeCol(colorTab, colorTab[e.v1], colorTab[e.v2]);//we merge both sets
+		}
+
+	} while (check(colorTab) == false);//checks if all colors belong to the same set
+
 	return T;
+
+}
+
+bool MST_SUCCESSOR::check(int* m)//checks if all colors belong to the same set
+{
+	int a = m[0];
+	for (int i = 0; i < vNum; i++)
+	{
+		if (a != m[i])
+		{
+			return false;
+		}
+	}
+	return true;
+
+}
+
+void MST_SUCCESSOR::changeCol(int * tab, int org, int dest) // sets color of the destination set to that of the original set
+{
+	for (int i = 0; i < vNum; i++)
+	{
+		if (tab[i] == dest)
+		{
+			tab[i] = org;
+		}
+	}
 }
 
 
@@ -198,9 +266,9 @@ MST_SUCCESSOR::MST_SUCCESSOR()
 
 MST_SUCCESSOR::MST_SUCCESSOR(int n)
 {
-	A = new TNode *[n];            // Tworzymy tablicê dynamiczn¹
-	for (int i = 0; i < n; i++) A[i] = NULL; // i wype³niamy j¹ pustymi listami
-	vNum = n ;                   // Zapamiêtujemy d³ugoœæ tablicy
+	A = new TNode *[n];            
+	for (int i = 0; i < n; i++) A[i] = NULL; 
+	vNum = n;                   
 	cost = 0;
 }
 
@@ -215,9 +283,9 @@ MST_SUCCESSOR::~MST_SUCCESSOR()
 		temp = A[i];
 		while (temp)
 		{
-			r = temp;                      // Zapamiêtujemy wskazanie
-			temp = temp->next;                // Przesuwamy siê do nastêpnego elementu listy
-			delete r;                   // Usuwamy element
+			r = temp;                      
+			temp = temp->next;               
+			delete r;                  
 		}
 	}
 

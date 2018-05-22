@@ -5,7 +5,7 @@
 
 
 
-
+// add edge to the queue and repair the heap e- edge
 void PQUEUE::push(Edge e)
 {
 	
@@ -14,7 +14,7 @@ void PQUEUE::push(Edge e)
 	size++;
 
 }
-
+// pops root from the queue and repairs the heap
 void PQUEUE::pop()
 {
 	
@@ -28,12 +28,12 @@ void PQUEUE::pop()
 	bubbleDown(0);
 
 }
-
+// gets root of the heap
 Edge PQUEUE::getFront()
 {
 		return heap[0];
 }
-
+//displays the heap
 void PQUEUE::display()
 {
 	std::cout << std::endl;
@@ -42,7 +42,7 @@ void PQUEUE::display()
 		std::cout << "start :" << heap[i].v1 << " finish:" << heap[i].v2 << " weight:" << heap[i].weight << std::endl;
 	}
 }
-
+// repairs the heap upward
 void PQUEUE::bubbleUp(int index)
 {
 	if (index == 0)
@@ -58,7 +58,7 @@ void PQUEUE::bubbleUp(int index)
 		bubbleUp(parentIndex);
 	}
 }
-
+// repairs the heap downward
 void PQUEUE::bubbleDown(int index)
 {
 	int length = size;
@@ -89,16 +89,16 @@ void PQUEUE::bubbleDown(int index)
 		bubbleDown(minIndex);
 	}
 }
-
+// creates the queue with n being max size of the heap
 PQUEUE::PQUEUE(int n)
 {
 	heap = new Edge[n];
 	maxSizeHeap = n;
 
 }
-
+// destructor 
 PQUEUE::~PQUEUE()
 {
 	size = 0;
-	delete[] heap;
+	delete [] heap;
 }
